@@ -193,7 +193,7 @@ func (o *Object) prepareUpload(ctx context.Context, remote string, src fs.Object
 func (o *Object) findResumableUpload(ctx context.Context, request api.UploadCreateRequest, leaf, directoryID string) (*uploadInfo, error) {
 	cursor := ""
 	for {
-		parameters := url.Values{"state": []string{"open"}, "limit": []string{"200"}}
+		parameters := url.Values{"state": []string{"open"}, "limit": []string{strconv.FormatInt(f.opt.PageSize, 10)}}
 		if cursor != "" {
 			parameters.Set("cursor", cursor)
 		}
@@ -237,7 +237,7 @@ func (o *Object) listUploadParts(ctx context.Context, uploadID string) ([]api.Up
 	cursor := ""
 	var parts []api.UploadPart
 	for {
-		parameters := url.Values{"limit": []string{"200"}}
+		parameters := url.Values{"limit": []string{strconv.FormatInt(f.opt.PageSize, 10)}}
 		if cursor != "" {
 			parameters.Set("cursor", cursor)
 		}

@@ -124,7 +124,7 @@ reduce the number of API requests needed for directories with many files,
 but may increase response time and memory usage for each request.
 `,
 			Name:    "page_size",
-			Default: 200,
+			Default: 2000,
 		}, {
 			Name:    "upload_concurrency",
 			Default: 4,
@@ -372,8 +372,6 @@ func NewFs(ctx context.Context, name string, root string, config configmap.Mappe
 	opt.ChunkSize = alignChunkSize(opt.ChunkSize)
 	if opt.PageSize < 1 {
 		opt.PageSize = 100
-	} else if opt.PageSize > 200 {
-		opt.PageSize = 200
 	}
 
 	f := &Fs{
@@ -502,7 +500,7 @@ func (f *Fs) getFileShares(ctx context.Context, id string) ([]api.FileShare, err
 	cursor := ""
 	var shares []api.FileShare
 	for {
-		parameters := url.Values{"limit": []string{"200"}}
+		parameters := url.Values{"limit": []string{strconv.FormatInt(f.opt.PageSize, 10)}}
 		if cursor != "" {
 			parameters.Set("cursor", cursor)
 		}
@@ -734,7 +732,7 @@ func (f *Fs) findObject(ctx context.Context, pathID, leaf string) ([]api.FileInf
 		opts := rest.Opts{
 			Method:     "GET",
 			Path:       "/api/v1/files",
-			Parameters: url.Values{"limit": []string{"200"}},
+			Parameters: url.Values{"limit": []string{strconv.FormatInt(f.opt.PageSize, 10)}},
 		}
 		setParentParameter(opts.Parameters, pathID)
 		if cursor != "" {

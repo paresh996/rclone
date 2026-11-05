@@ -176,7 +176,7 @@ Properties:
 - Config:      page_size
 - Env Var:     RCLONE_TELDRIVE_PAGE_SIZE
 - Type:        int
-- Default:     200
+- Default:     2000
 
 #### --teldrive-upload-host
 

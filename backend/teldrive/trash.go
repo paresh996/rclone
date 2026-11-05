@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/rclone/rclone/backend/teldrive/api"
@@ -160,7 +161,7 @@ func (f *Fs) listFilesByParent(ctx context.Context, parentID, status string) ([]
 	var files []api.FileInfo
 	for {
 		parameters := url.Values{
-			"limit":  []string{"200"},
+			"limit":  []string{strconv.FormatInt(f.opt.PageSize, 10)},
 			"status": []string{status},
 		}
 		setParentParameter(parameters, parentID)
